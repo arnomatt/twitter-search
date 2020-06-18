@@ -10,6 +10,8 @@ import io
 DAYS = 7
 # Max number of retrieved tweets
 COUNT = "2000"
+# Geocode for searching around Accra in a range of 20km
+GEOCODE = "geocode%3A5.550000%2C-0.020000%2C20km%20"
 # CONFIGURATION END
 
 # Create a credentials.json file in the project root and use it like this
@@ -27,18 +29,14 @@ api = twitter.Api(consumer_key=data["api-key"],
                   access_token_key=data["access-token"],
                   access_token_secret=data["access-token-secret"])
 
-since = str(datetime.date.today()-timedelta(DAYS))
-count = COUNT
-# Accra geoloc
-loc = "near%3A5.6231983%2C-0.18677313071441398%20within%3A20km&"
-root_path = "results/"
 
+def setupQuery(filename, keyword, geocode=""):
+    since = str(datetime.date.today()-timedelta(DAYS))
 
-def setupQuery(filename, keyword, loc=""):
     def query():
-        return api.GetSearch(raw_query="q="+keyword+"%20exclude%3Anativeretweets%20exclude%3Aretweets%20&result_type=recent&since="+since+"&count="+count+"&tweet_mode=extended&"+loc)
+        return api.GetSearch(raw_query="q="+keyword+"%20"+geocode+"%20exclude%3Anativeretweets%20exclude%3Aretweets%20&result_type=recent&since="+since+"&count="+COUNT+"&tweet_mode=extended")
 
-    fname = root_path+filename
+    fname = "results/" + filename + "_since_" + since
 
     try:
         os.remove(fname)
@@ -61,6 +59,6 @@ def setupQuery(filename, keyword, loc=""):
         f.close()
 
 
-setupQuery("housing_WithAccraGeoLoc.txt", "housing", loc)
+setupQuery("housing_WithAccraGeoLoc.txt", "housing", GEOCODE)
 setupQuery("housing_Accra.txt", "housing accra")
 setupQuery("housing_Ghana.txt", "housing ghana")
