@@ -36,12 +36,12 @@ def setupQuery(filename, keyword, geocode=""):
     def query():
         return api.GetSearch(raw_query="q="+keyword+"%20"+geocode+"%20exclude%3Anativeretweets%20exclude%3Aretweets%20&result_type=recent&since="+since+"&count="+COUNT+"&tweet_mode=extended")
 
-    fname = "results/" + filename + "_since_" + since
+    fname = "results/" + filename + "_since_" + since + ".txt"
 
     try:
         os.remove(fname)
     except:
-        print("File not found")
+        print("File not found, creating a new one")
 
     with io.open(fname, "w", encoding="utf-8") as f:
         queryResults = query()
@@ -59,6 +59,6 @@ def setupQuery(filename, keyword, geocode=""):
         f.close()
 
 
-setupQuery("housing_WithAccraGeoLoc.txt", "housing", GEOCODE)
-setupQuery("housing_Accra.txt", "housing accra")
-setupQuery("housing_Ghana.txt", "housing ghana")
+setupQuery("housing_WithAccraGeoLoc", "housing", GEOCODE)
+setupQuery("housing_Accra", "housing accra")
+setupQuery("housing_Ghana", "housing ghana")
